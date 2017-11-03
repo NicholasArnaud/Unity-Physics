@@ -27,6 +27,10 @@ public class AABB : MonoBehaviour
     void Start()
     {
         name = gameObject.name;
+        gameObjectPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+        gameObjectScale = new Vector2(gameObject.transform.localScale.x, gameObject.transform.localScale.y);
+        _min = gameObjectPos - gameObjectScale / 2;
+        _max = gameObjectPos + gameObjectScale / 2;
     }
     void Update()
     {

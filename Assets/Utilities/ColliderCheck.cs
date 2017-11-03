@@ -33,21 +33,33 @@ public class ColliderCheck : MonoBehaviour
         {
             for (int j = i + 1; j < axisList.Count; j++)
             {
-                if (axisList[j]._min.x > axisList[i]._max.x)
+                if (axisList[i]._max.x < axisList[j]._min.x)
                 {
-                    ActiveList.Remove(axisList[i]);
+                    //ActiveList.Remove(axisList[i]);
                     break;
                 }
-                if (axisList[j]._min.y > axisList[i]._max.y)
+                //Checks overlapping on x and y axis
+                if (axisList[i]._max.y < axisList[j]._min.y || axisList[j]._max.y < axisList[i]._min.y)
                 {
                     ActiveList.Add(axisList[i]);
-                    ActiveList.Remove(axisList[j]);
-                    continue;
+                    //Handling collision here
                 }
-                colliding = axisList[0].TestOnLap(axisList[i], axisList[j]);
 
             }
         }
         Debug.Log("NumOfAABBInActive: " + ActiveList.Count);
+    }
+    public bool TestOnLap(AABB boxCollider, AABB boxCollidie)
+    {
+        float d1x = boxCollidie._min.x - boxCollider._max.x;
+        float d1y = boxCollidie._min.y - boxCollider._max.y;
+        float d2x = boxCollider._min.x - boxCollidie._max.x;
+        float d2y = boxCollider._min.y - boxCollidie._max.y;
+
+        if (d1x > 0 || d1y > 0)
+            return false;
+        if (d2x > 0 || d2y > 0)
+            return false;
+        return true;
     }
 }
