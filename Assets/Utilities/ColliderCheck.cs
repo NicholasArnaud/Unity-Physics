@@ -26,6 +26,7 @@ public class ColliderCheck : MonoBehaviour
     void Update()
     {
         ActiveList.Clear();
+        colliding = false;
         axisList.Sort((ob, ob2) => ob._min.x.CompareTo(ob2._min.x)); //biggest to smallest        
         ActiveList.Add(axisList[0]);
 
@@ -39,12 +40,13 @@ public class ColliderCheck : MonoBehaviour
                     break;
                 }
                 //Checks overlapping on x and y axis
-                if (axisList[i]._max.y < axisList[j]._min.y || axisList[j]._max.y < axisList[i]._min.y)
+                if (axisList[i]._min.x < axisList[j]._max.x && axisList[i]._max.x > axisList[j]._min.x &&
+                    axisList[i]._min.y < axisList[j]._max.y && axisList[i]._max.y > axisList[j]._min.y)
                 {
                     ActiveList.Add(axisList[i]);
                     //Handling collision here
+                    colliding = TestOnLap(axisList[i], axisList[j]);
                 }
-
             }
         }
         Debug.Log("NumOfAABBInActive: " + ActiveList.Count);
