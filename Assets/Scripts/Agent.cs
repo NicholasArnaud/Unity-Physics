@@ -5,15 +5,18 @@ namespace Nick
     public abstract class Agent : ScriptableObject
     {
         protected float Mass;
-        protected Vector3 Velocity;
+        protected internal Vector3 Velocity;
         protected float MaxSpeed;
         protected float Speed;
         protected Vector3 Acceleration;
-        protected Vector3 position;
+        protected internal Vector3 position;
         protected Vector3 Force;
 
         public Vector3 Position
-        { get { return position; } }
+        {
+            get { return position; }
+            set { position = value; }
+        }
 
 
         protected internal abstract Vector3 Update_Agent(float deltaTime);

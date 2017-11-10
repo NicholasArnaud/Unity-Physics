@@ -14,18 +14,22 @@ namespace Nick
 
         void Update()
         {
-            Vector3.Distance(transform.position, Vector3.zero);
-            {
-                GetComponent<MeshRenderer>().material.color = Color.black;
-                agent.Add_Force(10,transform.position - Vector3.zero);
-            }
+
         }
         public void LateUpdate()
         {
             if (agent == null)
                 return;
+            transform.forward = agent.Velocity;           
             transform.localPosition = agent.Update_Agent(Time.deltaTime); 
         }
+
+#if UNITY_EDITOR
+        void OnDrawGizmos()
+        {
+            Gizmos.DrawRay(transform.position, transform.forward);
+        }
+#endif
     }
 
 

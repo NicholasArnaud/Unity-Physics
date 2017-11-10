@@ -1,5 +1,7 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
 namespace Nick
 {
@@ -7,7 +9,7 @@ namespace Nick
     public class Boid : Agent
     {
 
-        
+
         protected internal override bool Add_Force(float mag, Vector3 dir)
         {
             if (mag == 0)
@@ -19,12 +21,14 @@ namespace Nick
 
         protected internal override Vector3 Update_Agent(float deltaTime)
         {
-            UnityEngine.Assertions.Assert.IsTrue(Mass>0);
+            UnityEngine.Assertions.Assert.IsTrue(Mass > 0);
             Acceleration = Force * 1 / Mass;
             Velocity += Acceleration * deltaTime;
-            Velocity = Vector3.ClampMagnitude(Velocity, MaxSpeed);
+            Velocity = Vector3.ClampMagnitude(Velocity, MaxSpeed);            
             position += Velocity * deltaTime;
             return position;
         }
+
+        
     }
 }
