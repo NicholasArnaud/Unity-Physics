@@ -65,6 +65,7 @@ namespace Nick
             {
                 var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 go.transform.SetParent(transform);
+                Destroy(go.GetComponent<SphereCollider>());
                 go.name = string.Format("{0} {1}", "Agent: ", i);
                 go.transform.position = Utility.RandomVector3;
 
