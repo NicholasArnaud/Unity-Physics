@@ -24,7 +24,7 @@ namespace Nick
             UnityEngine.Assertions.Assert.IsTrue(Mass > 0);
             Acceleration = Force * 1 / Mass;
             Velocity += Acceleration * deltaTime;
-            Velocity = Vector3.ClampMagnitude(Velocity, MaxSpeed);            
+            Velocity = Vector3.ClampMagnitude(Velocity,MaxSpeed);            
             position += Velocity * deltaTime;
             return position;
         }

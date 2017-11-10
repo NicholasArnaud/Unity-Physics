@@ -6,10 +6,9 @@ namespace Nick
     {
         protected float Mass;
         protected internal Vector3 Velocity;
-        protected float MaxSpeed;
-        protected float Speed;
         protected Vector3 Acceleration;
         protected internal Vector3 position;
+        protected internal float MaxSpeed;
         protected Vector3 Force;
 
         public Vector3 Position
@@ -17,7 +16,7 @@ namespace Nick
             get { return position; }
             set { position = value; }
         }
-
+        
 
         protected internal abstract Vector3 Update_Agent(float deltaTime);
 
@@ -27,10 +26,15 @@ namespace Nick
         public void Initialize(Transform owner)
         {
             Mass = 1;
+            MaxSpeed = 5;
             Velocity = Utility.RandomVector3;
             Acceleration = Utility.RandomVector3;
-            position = Utility.RandomVector3;
-            MaxSpeed = 5;
+
+            var x = Random.Range(-50, 50);
+            var y = Random.Range(-50, 50);
+            var z = Random.Range(-50, 50);
+            var newv = new Vector3(x, y, z);
+            position = newv;
         }
     }
 }

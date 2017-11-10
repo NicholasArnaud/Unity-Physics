@@ -15,7 +15,6 @@ namespace Nick
             get
             {
                 var x = Random.Range(-1, 1);
-
                 var y = Random.Range(-1, 1);
                 var z = Random.Range(-1, 1);
                 var newv = new Vector3(x, y, z);
@@ -34,19 +33,18 @@ namespace Nick
         public List<Agent> agents;
         public static List<AgentBehaviour> agentBehaviours;
         private static List<GameObject> gameObjects;
-
-
         public void Update()
         {
+            
             foreach (var agent in agents)
             {
                 List<Slider> slider = new List<Slider>(FindObjectsOfType<Slider>());
                 Vector3 v1 = Cohesion(agent as Boid)* slider[0].value;
-                Debug.DrawLine(agent.position,agent.position+v1);
+                Debug.DrawLine(agent.position,agent.position+v1.normalized);
                 Vector3 v2 = Dispersion(agent as Boid)* slider[1].value;
                 Debug.DrawLine(agent.position, agent.position+ v2.normalized);
                 Vector3 v3 = Alignment(agent as Boid)* slider[2].value;
-                Debug.DrawLine(agent.position, agent.position+v3);
+                Debug.DrawLine(agent.position, agent.position+v3.normalized);
                 agent.Add_Force(1, v1 + v2 + v3);
             }
         }
@@ -124,7 +122,7 @@ namespace Nick
                     Force = Force + b.Velocity;
                 }
             }
-            Force = Force / (agents.Count -1);
+            Force = Force / agents.Count;
             return (Force - bj.Velocity);
         }
     }
