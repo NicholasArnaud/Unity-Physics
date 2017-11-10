@@ -26,7 +26,7 @@ namespace Nick
         public void Initialize(Transform owner)
         {
             Mass = 1;
-            MaxSpeed = 5;
+            MaxSpeed = 3;
             Velocity = Utility.RandomVector3;
             Acceleration = Utility.RandomVector3;
 
