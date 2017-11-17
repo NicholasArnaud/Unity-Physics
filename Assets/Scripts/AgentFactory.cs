@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +29,7 @@ namespace Nick
     {
 
         public int Count;
+        public float BorderSize;
         public Transform Target;
         public List<Agent> agents;
         public static List<AgentBehaviour> agentBehaviours;
@@ -40,14 +40,14 @@ namespace Nick
             foreach (var agent in agents)
             {
                 List<Slider> slider = new List<Slider>(FindObjectsOfType<Slider>());
-                Vector3 v1 = Cohesion(agent as Boid)* slider[0].value;
+                Vector3 v1 = Cohesion(agent as Boid)* slider[3].value;
                 Debug.DrawLine(agent.position,agent.position+v1.normalized);
-                Vector3 v2 = Dispersion(agent as Boid)* slider[1].value;
+                Vector3 v2 = Dispersion(agent as Boid)* slider[2].value;
                 Debug.DrawLine(agent.position, agent.position+ v2.normalized);
-                Vector3 v3 = Alignment(agent as Boid)* slider[2].value;
+                Vector3 v3 = Alignment(agent as Boid)* slider[1].value;
                 Debug.DrawLine(agent.position, agent.position+v3.normalized);
                 Vector3 v4 = Bound(agent as Boid);
-                Vector3 v5 = targetPlace(agent as Boid);
+                Vector3 v5 = targetPlace(agent as Boid)* slider[0].value;
                 //Setting velocity and positions
                 agent.Velocity = (agent.Velocity + v1 + v2 + v3 +v4 + v5);
                 LimitVelocity(agent as Boid);
@@ -59,16 +59,20 @@ namespace Nick
         [ContextMenu("Create")]
         public void Create()
         {
+            if(agents !=null && agentBehaviours !=null)
+                Destroy();
             agents = new List<Agent>();
             agentBehaviours = new List<AgentBehaviour>();
+            
             for (int i = 0; i < Count; i++)
             {
                 var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 go.transform.SetParent(transform);
                 Destroy(go.GetComponent<SphereCollider>());
+                
                 go.name = string.Format("{0} {1}", "Agent: ", i);
                 go.transform.position = Utility.RandomVector3;
-
+                
                 var behaviour = go.AddComponent<BoidBehaviour>();
                 var boid = ScriptableObject.CreateInstance<Boid>();
 
@@ -150,7 +154,7 @@ namespace Nick
 
         protected Vector3 Bound(Boid b)
         {
-            int Xmin = -50, Xmax = 50, Ymin = -50, Ymax= 50, Zmin = -50, Zmax = 50;
+            float Xmin = -BorderSize, Xmax = BorderSize, Ymin = -BorderSize, Ymax= BorderSize, Zmin = -BorderSize, Zmax = BorderSize;
             var Force = Vector3.zero;
             if (b.position.x < Xmin)
                 Force.x = 10;
