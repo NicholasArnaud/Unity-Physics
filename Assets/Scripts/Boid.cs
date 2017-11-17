@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using Debug = System.Diagnostics.Debug;
+﻿using UnityEngine;
 
 namespace Nick
 {

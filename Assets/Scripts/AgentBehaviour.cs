@@ -6,6 +6,4 @@ namespace Nick
     {
         protected Agent agent;
     }
-
-
 }
