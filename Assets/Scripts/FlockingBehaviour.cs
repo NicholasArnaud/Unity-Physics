@@ -11,22 +11,19 @@ namespace Nick
         public float cohVal, disVal, aligVal, tarVal, bounVal;
         public Text boundText;
         public Transform Target;
-        private List<Boid> boids;
-
-        public FlockingBehaviour()
-        {
-            boids = agentFactory.GetComponent<AgentFactory>().GetBoids();
-        }
+        private List<Boid> boids= new List<Boid>();
 
         // Use this for initialization
         void Start()
         {
+            agentFactory.GetComponent<AgentFactory>().Create();
+            boids = agentFactory.GetComponent<AgentFactory>().GetBoids();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (boids.Count == 0)
+            if (boids.Count == 0||boids != agentFactory.GetComponent<AgentFactory>().GetBoids())
                 UpdateBoids();
             foreach (var agent in boids)
             {
