@@ -12,6 +12,7 @@ public class ColliderCheck : MonoBehaviour
     private Vector2 gameObjectScale;
     [SerializeField]
     List<AABB> ActiveList = new List<AABB>();
+    public List<AABB> CollidingObj = new List<AABB>();
 
     // Use this for initialization
     void Start()
@@ -26,6 +27,7 @@ public class ColliderCheck : MonoBehaviour
     void Update()
     {
         ActiveList.Clear();
+        CollidingObj.Clear();
         colliding = false;
         axisList.Sort((ob, ob2) => ob._min.x.CompareTo(ob2._min.x)); //biggest to smallest        
         ActiveList.Add(axisList[0]);
@@ -46,11 +48,20 @@ public class ColliderCheck : MonoBehaviour
                     ActiveList.Add(axisList[i]);
                     //Handling collision here
                     colliding = TestOnLap(axisList[i], axisList[j]);
+                    if (colliding == true)
+                    {
+                        CollidingObj.Add(axisList[i]);
+                        CollidingObj.Add(axisList[j]);
+                    }
+
                 }
             }
         }
+
         Debug.Log("NumOfAABBInActive: " + ActiveList.Count);
     }
+
+
     public bool TestOnLap(AABB boxCollider, AABB boxCollidie)
     {
         float d1x = boxCollidie._min.x - boxCollider._max.x;
