@@ -5,16 +5,16 @@ using UnityEngine;
 public class ParticleBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private HookesLaw.Particle particle;
+    public HookesLaw.Particle particle;
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-        particle = new HookesLaw.Particle();
-        particle.AddForce(Vector3.right);
+        Vector3 RandVector3 = new Vector3 (Random.Range(0, 4), Random.Range(0, 4), Random.Range(0, 4));
+        particle = new HookesLaw.Particle(transform.position,Vector3.zero, 1);
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         transform.position = particle.Update(Time.fixedDeltaTime);
     }

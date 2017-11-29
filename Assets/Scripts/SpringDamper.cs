@@ -26,20 +26,22 @@ namespace HookesLaw
             acceleration = Vector3.zero;
         }
         [SerializeField]
-        private Vector3 position;
+        public Vector3 position;
         [SerializeField]
         private Vector3 velocity;
         [SerializeField]
         private Vector3 acceleration;
         [SerializeField]
-        private float mass;
-        [SerializeField]
         private Vector3 force;
+        [SerializeField]
+        private float mass;
+        
 
         public void AddForce(Vector3 f)
         {
             force += f;
         }
+
         public Vector3 Update(float deltaTime)
         {
             acceleration = force / mass;
@@ -53,13 +55,8 @@ namespace HookesLaw
     public class SpringDamper
     {
         private Particle p1, p2;
-        private float Ks; //spring constant
+        private float Ks; //spring constant or tension
         private float Lo; //rest length
-
-        public SpringDamper()
-        {
-            
-        }
 
         public SpringDamper(Particle particle1, Particle particle2, float springKs, float springLo)
         {
@@ -69,5 +66,12 @@ namespace HookesLaw
             Lo = springLo;
         }
 
+        public Vector3 Update()
+        {
+            Vector3 dir = -(p1.position - p2.position).normalized;
+            float Distance = (p1.position - p2.position).magnitude;
+            p1.AddForce(-Ks* dir*Lo);
+            return dir;
+        }
     }
 }
