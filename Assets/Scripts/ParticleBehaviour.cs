@@ -9,7 +9,6 @@ public class ParticleBehaviour : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        Vector3 RandVector3 = new Vector3 (Random.Range(0, 4), Random.Range(0, 4), Random.Range(0, 4));
         particle = new HookesLaw.Particle(transform.position,Vector3.zero, 1);
     }
 
