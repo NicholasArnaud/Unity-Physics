@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,16 +26,15 @@ namespace HookesLaw
             mass = m;
             acceleration = Vector3.zero;
         }
-        [SerializeField]
+        [HideInInspector]
         public Vector3 position;
-        [SerializeField]
+        [HideInInspector]
         public Vector3 velocity;
-        [SerializeField]
         private Vector3 acceleration;
-        [SerializeField]
         private Vector3 force;
-        [SerializeField]
         private float mass;
+        [SerializeField]
+        public string name;
         
 
         public void AddForce(Vector3 f)
@@ -52,12 +52,15 @@ namespace HookesLaw
         }
     }
 
-
+    [System.Serializable]
     public class SpringDamper
     {
         public Particle p1, p2;
+        [HideInInspector]
         public float Ks; //spring constant or tension
+        [HideInInspector]
         public float Kd; //damping factor
+        [HideInInspector]
         public float Lo; //rest length
 
         public SpringDamper(Particle particle1, Particle particle2, float springKs,float springKd, float springLo)
