@@ -32,22 +32,51 @@ public class SpringDampBehaviour : MonoBehaviour
         }
 
     }
+    private void OnDrawGizmos()
+    {
+        foreach (var damper in SpringDampers)
+        {
+            Gizmos.DrawLine(damper.p1.position, damper.p2.position);
+        }
+    }
+
 
     void AssignDampers(List<ParticleBehaviour> particles)
     {
         int phase1 = 0;
         SpringDamper sD;
 
-        foreach (var particle in particles)
+        for (int i = 0; i < sizeNByN * sizeNByN-1; i++)
         {
-            if (phase1 >= particles.Count)
-                phase1 = 0;
-            if (particle.particle == particles[phase1].particle)
-                phase1++;
-            sD = new SpringDamper(particle.particle, particles[phase1].particle, 10, 0.5f, 1);
-            SpringDampers.Add(sD);
-            phase1 += 1;
+            if (i % sizeNByN != sizeNByN)
+            {
+                sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN - 1].particle, 10, 0.5f, 1);
+                SpringDampers.Add(sD);
+                if (i < sizeNByN * sizeNByN - 1)
+                {
+                    sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN].particle, 10, 0.5f, 1);
+                    SpringDampers.Add(sD);
+                }
+            }
+
+            if (i % sizeNByN != sizeNByN * sizeNByN - 1)
+            {
+                sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN - 1].particle, 10, 0.5f, 1);
+                SpringDampers.Add(sD);
+            }
         }
+
+
+        //foreach (var particle in particles)
+        //{
+        //    if (phase1 >= particles.Count)
+        //        phase1 = 0;
+        //    if (particle.particle == particles[phase1].particle)
+        //        phase1++;
+        //    sD = new SpringDamper(particle.particle, particles[phase1].particle, 10, 0.5f, 1);
+        //    SpringDampers.Add(sD);
+        //    phase1 += 1;
+        //}
 
     }
 
@@ -58,11 +87,13 @@ public class SpringDampBehaviour : MonoBehaviour
         {
             for (int j = 0; j < sizeNByN; j++)
             {
-                int test = i * sizeNByN + j; 
+                int test = i * sizeNByN + j;
                 GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                particle.gameObject.name = "p" + (i*sizeNByN +j);
+                particle.gameObject.name = "p" + (i * sizeNByN + j);
+                particle.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                particle.gameObject.GetComponent<SphereCollider>().enabled = false;
                 particle.transform.SetParent(this.gameObject.transform);
-                particle.transform.position =new Vector3(i,j,0);
+                particle.transform.position = new Vector3(i, j, 0);
                 particle.AddComponent<ParticleBehaviour>();
                 particles.Add(particle.GetComponent<ParticleBehaviour>());
             }
