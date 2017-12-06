@@ -152,11 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b7f19715b533b4e9ca881105179a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeNByN: 15
+  sizeNByN: 6
   springTension: 55
   springDamper: 3
   restLength: 1
   SpringDampers: []
+  triangles: []
 --- !u!1 &1006925372
 GameObject:
   m_ObjectHideFlags: 0

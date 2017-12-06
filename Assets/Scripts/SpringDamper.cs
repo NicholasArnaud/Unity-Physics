@@ -52,6 +52,23 @@ namespace HookesLaw
         }
     }
 
+
+    [System.Serializable]
+    public class Triangle
+    {
+        public Particle _p1;
+        public Particle _p2;
+        public Particle _p3;
+
+        public Triangle(Particle p1, Particle p2, Particle p3)
+        {
+            _p1 = p1;
+            _p2 = p2;
+            _p3 = p3;
+        }
+    }
+
+
     [System.Serializable]
     public class SpringDamper
     {
