@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace HookesLaw
@@ -33,15 +30,18 @@ namespace HookesLaw
         private Vector3 acceleration;
         private Vector3 force;
         private float mass;
-        [SerializeField]
         public string name;
-        
+        public bool Locked;
 
         public void AddForce(Vector3 f)
         {
-            force += f;
+            if (!Locked)
+            {
+                Vector3 Gravity = new Vector3(0, -9.81f, 0);
+                Gravity = Gravity *.5f;
+                force += f + Gravity;
+            }
         }
-
         public Vector3 Update(float deltaTime)
         {
             acceleration = force / mass;

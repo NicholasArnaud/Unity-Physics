@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HookesLaw;
 using UnityEngine;
 
 public class SpringDampBehaviour : MonoBehaviour
 {
     public int sizeNByN;
+    public float springTension;
+    public float springDamper;
+    public float restLength;
     public List<SpringDamper> SpringDampers = new List<SpringDamper>();
 
     //  public ParticleBehaviour particle1;
@@ -30,8 +32,8 @@ public class SpringDampBehaviour : MonoBehaviour
         {
             sD.ApplySpring();
         }
-
     }
+
     private void OnDrawGizmos()
     {
         foreach (var damper in SpringDampers)
@@ -43,41 +45,57 @@ public class SpringDampBehaviour : MonoBehaviour
 
     void AssignDampers(List<ParticleBehaviour> particles)
     {
-        int phase1 = 0;
         SpringDamper sD;
 
-        for (int i = 0; i < sizeNByN * sizeNByN-1; i++)
+        for (int i = 0; i < sizeNByN * sizeNByN - 1; i++)
         {
-            if (i % sizeNByN != sizeNByN)
+            //Setting Verticals
+            if (i % sizeNByN < sizeNByN - 1)
             {
-                sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN - 1].particle, 10, 0.5f, 1);
+                sD = new SpringDamper(particles[i].particle, particles[i + 1].particle, springTension, springDamper, restLength);
                 SpringDampers.Add(sD);
-                if (i < sizeNByN * sizeNByN - 1)
+                if (i % sizeNByN == 0)
                 {
-                    sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN].particle, 10, 0.5f, 1);
+                    sD = new SpringDamper(particles[i].particle, particles[i + 2].particle, springTension, springDamper, restLength);
+                    SpringDampers.Add(sD);
+                }
+
+            }
+
+            //Setting Horizontals
+            if (i < sizeNByN * sizeNByN - sizeNByN)
+            {
+                sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN].particle, springTension, springDamper, restLength);
+                SpringDampers.Add(sD);
+                if (i % sizeNByN == 0)
+                {
+                    sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN + 1].particle, springTension, springDamper, restLength);
                     SpringDampers.Add(sD);
                 }
             }
 
-            if (i % sizeNByN != sizeNByN * sizeNByN - 1)
+            //Setting diagnals
+            if (i < sizeNByN * sizeNByN - sizeNByN && i % sizeNByN < sizeNByN - 1)
             {
-                sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN - 1].particle, 10, 0.5f, 1);
+                sD = new SpringDamper(particles[i + 1].particle, particles[i + sizeNByN].particle, springTension, springDamper, restLength);
                 SpringDampers.Add(sD);
             }
+            if (i < sizeNByN * sizeNByN - sizeNByN && i % sizeNByN < sizeNByN - 1)
+            {
+                sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN + 1].particle, springTension, springDamper, restLength);
+                SpringDampers.Add(sD);
+            }
+
+            //Locking particles
+            if (i % sizeNByN == 0 || i % sizeNByN == sizeNByN - 1)
+            {
+                particles[i].particle.Locked = true;
+            }
+            if (i == sizeNByN* sizeNByN-2)
+            {
+                particles[i+1].particle.Locked = true;
+            }
         }
-
-
-        //foreach (var particle in particles)
-        //{
-        //    if (phase1 >= particles.Count)
-        //        phase1 = 0;
-        //    if (particle.particle == particles[phase1].particle)
-        //        phase1++;
-        //    sD = new SpringDamper(particle.particle, particles[phase1].particle, 10, 0.5f, 1);
-        //    SpringDampers.Add(sD);
-        //    phase1 += 1;
-        //}
-
     }
 
     void CreateParticles(int sizeNByN)
@@ -87,7 +105,6 @@ public class SpringDampBehaviour : MonoBehaviour
         {
             for (int j = 0; j < sizeNByN; j++)
             {
-                int test = i * sizeNByN + j;
                 GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 particle.gameObject.name = "p" + (i * sizeNByN + j);
                 particle.gameObject.GetComponent<MeshRenderer>().enabled = false;
