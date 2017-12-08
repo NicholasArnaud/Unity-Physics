@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace HookesLaw
@@ -37,13 +38,17 @@ namespace HookesLaw
         {
             if (!Locked)
             {
-                Vector3 Gravity = new Vector3(0, -9.81f, 0);
-                Gravity = Gravity *.5f;
-                force += f + Gravity;
+                force += f;
             }
         }
         public Vector3 Update(float deltaTime)
         {
+            if (!Locked)
+            {
+                Vector3 Gravity = new Vector3(0, -9.81f, 0);
+                force += Gravity * deltaTime;
+            }
+            
             acceleration = force / mass;
             velocity += acceleration * deltaTime;
             position += velocity * deltaTime;
@@ -53,20 +58,7 @@ namespace HookesLaw
     }
 
 
-    [System.Serializable]
-    public class Triangle
-    {
-        public Particle _p1;
-        public Particle _p2;
-        public Particle _p3;
-
-        public Triangle(Particle p1, Particle p2, Particle p3)
-        {
-            _p1 = p1;
-            _p2 = p2;
-            _p3 = p3;
-        }
-    }
+    
 
 
     [System.Serializable]
@@ -80,6 +72,8 @@ namespace HookesLaw
         [HideInInspector]
         public float Lo; //rest length
 
+        AerodynamicBehaviour ADB = new AerodynamicBehaviour();
+
         public SpringDamper(Particle particle1, Particle particle2, float springKs,float springKd, float springLo)
         {
             p1 = particle1;
@@ -88,6 +82,7 @@ namespace HookesLaw
             Kd = springKd;
             Lo = springLo;
         }
+
         public void ApplySpring()
         {
             var e = p2.position - p1.position;
