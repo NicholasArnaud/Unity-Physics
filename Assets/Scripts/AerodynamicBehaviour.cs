@@ -6,19 +6,19 @@ namespace HookesLaw
 {
     public class AerodynamicBehaviour
     {
-        public static float windDensity = 1.1f;
-        public static Vector3 Dir = new Vector3(0,0,5);
-        public static float dragCo = 1.5f;
+        public static float windDensity = 1f;
+        public static Vector3 Dir = new Vector3(1,1,1);
+        public static float dragCo = 0.5f;
         public List<Triangle> triangles;
 
         [System.Serializable]
         public class Triangle
         {
-            public Particle _p1;
-            public Particle _p2;
-            public Particle _p3;
+            public ParticleBehaviour _p1;
+            public ParticleBehaviour _p2;
+            public ParticleBehaviour _p3;
 
-            public Triangle(Particle p1, Particle p2, Particle p3)
+            public Triangle(ParticleBehaviour p1, ParticleBehaviour p2, ParticleBehaviour p3)
             {
                 _p1 = p1;
                 _p2 = p2;
@@ -28,9 +28,9 @@ namespace HookesLaw
 
         public static void WindForce(Triangle triangle)
         {
-            Particle _p1 = triangle._p1;
-            Particle _p2 = triangle._p2;
-            Particle _p3 = triangle._p3;
+            ParticleBehaviour _p1 = triangle._p1;
+            ParticleBehaviour _p2 = triangle._p2;
+            ParticleBehaviour _p3 = triangle._p3;
 
             Vector3 v1 = _p1.velocity;
             Vector3 v2 = _p2.velocity;

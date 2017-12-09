@@ -5,9 +5,9 @@ using UnityEngine;
 namespace HookesLaw
 {
     [System.Serializable]
-    public class Particle
+    public class ParticleBehaviour
     {
-        public Particle()
+        public ParticleBehaviour()
         {
             force =Vector3.zero;
             position = Vector3.zero;
@@ -16,7 +16,7 @@ namespace HookesLaw
             mass = 1;
         }
 
-        public Particle(Vector3 p, Vector3 v, float m)
+        public ParticleBehaviour(Vector3 p, Vector3 v, float m)
         {
             force = Vector3.zero;
             position = p;
@@ -64,17 +64,16 @@ namespace HookesLaw
     [System.Serializable]
     public class SpringDamper
     {
-        public Particle p1, p2;
+        public ParticleBehaviour p1, p2;
         [HideInInspector]
         public float Ks; //spring constant or tension
         [HideInInspector]
         public float Kd; //damping factor
         [HideInInspector]
         public float Lo; //rest length
+        
 
-        AerodynamicBehaviour ADB = new AerodynamicBehaviour();
-
-        public SpringDamper(Particle particle1, Particle particle2, float springKs,float springKd, float springLo)
+        public SpringDamper(ParticleBehaviour particle1, ParticleBehaviour particle2, float springKs,float springKd, float springLo)
         {
             p1 = particle1;
             p2 = particle2;

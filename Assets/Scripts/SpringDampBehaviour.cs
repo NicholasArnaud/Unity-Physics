@@ -12,9 +12,8 @@ namespace HookesLaw
         public float restLength;
         public List<SpringDamper> SpringDampers = new List<SpringDamper>();
         public List<AerodynamicBehaviour.Triangle> triangles = new List<AerodynamicBehaviour.Triangle>();
-
-
-        private List<ParticleBehaviour> particles;
+        [HideInInspector]
+        public List<global::ParticleBehaviour> particles;
         // Use this for initialization
         void Start()
         {
@@ -34,10 +33,12 @@ namespace HookesLaw
             {
                 sD.ApplySpring();
             }
+
             foreach (AerodynamicBehaviour.Triangle triangle in triangles)
             {
                 AerodynamicBehaviour.WindForce(triangle);
             }
+            CheckParticleDistance();
         }
 
         private void OnDrawGizmos()
@@ -49,7 +50,7 @@ namespace HookesLaw
         }
 
 
-        void AssignDampers(List<ParticleBehaviour> particles)
+        void AssignDampers(List<global::ParticleBehaviour> particles)
         {
             SpringDamper sD;
 
@@ -93,14 +94,14 @@ namespace HookesLaw
                 }
 
                 //Locking particles
-                if (i % sizeNByN == 0)
+                if (i <sizeNByN || i >(sizeNByN *sizeNByN)-sizeNByN)
                 {
                     particles[i].particle.Locked = true;
                 }
             }
         }
 
-        void CreateTriangles(List<ParticleBehaviour> particles)
+        void CreateTriangles(List<global::ParticleBehaviour> particles)
         {
             for (int i = 0; i < sizeNByN * sizeNByN - 1; i++)
             {
@@ -126,21 +127,34 @@ namespace HookesLaw
 
         void CreateParticles(int sizeNbyN)
         {
-            particles = new List<ParticleBehaviour>();
+            particles = new List<global::ParticleBehaviour>();
             for (int i = 0; i < sizeNbyN; i++)
             {
                 for (int j = 0; j < sizeNbyN; j++)
                 {
                     GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     particle.gameObject.name = "p" + (i * sizeNbyN + j);
-                    particle.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                    particle.gameObject.GetComponent<SphereCollider>().enabled = false;
+                    particle.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    Destroy(particle.gameObject.GetComponent<SphereCollider>());
                     particle.transform.SetParent(this.gameObject.transform);
                     particle.transform.position = new Vector3(i, j, 0);
-                    particle.AddComponent<ParticleBehaviour>();
-                    particles.Add(particle.GetComponent<ParticleBehaviour>());
+                    particle.AddComponent<global::ParticleBehaviour>();
+                    particles.Add(particle.GetComponent<global::ParticleBehaviour>());
                 }
             }
+        }
+
+        public void CheckParticleDistance()
+        {
+            List<SpringDamper> temp = SpringDampers;
+            for(int i =0; i <SpringDampers.Count;i++)
+            {
+                if (restLength * 2 < Vector3.Distance(SpringDampers[i].p2.position, SpringDampers[i].p1.position))
+                {
+                    temp.Remove(SpringDampers[i]);
+                }
+            }
+            SpringDampers = temp;
         }
     }
 
