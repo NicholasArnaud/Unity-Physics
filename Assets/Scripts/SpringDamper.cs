@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
 namespace HookesLaw
 {
     [System.Serializable]
-    public class Particle
+    public class ParticleBehaviour
     {
-        public Particle()
+        public ParticleBehaviour()
         {
             force =Vector3.zero;
             position = Vector3.zero;
@@ -17,7 +16,7 @@ namespace HookesLaw
             mass = 1;
         }
 
-        public Particle(Vector3 p, Vector3 v, float m)
+        public ParticleBehaviour(Vector3 p, Vector3 v, float m)
         {
             force = Vector3.zero;
             position = p;
@@ -25,42 +24,56 @@ namespace HookesLaw
             mass = m;
             acceleration = Vector3.zero;
         }
-        [SerializeField]
+        [HideInInspector]
         public Vector3 position;
-        [SerializeField]
+        [HideInInspector]
         public Vector3 velocity;
-        [SerializeField]
         private Vector3 acceleration;
-        [SerializeField]
         private Vector3 force;
-        [SerializeField]
         private float mass;
-        
+        public string name;
+        public bool Locked;
 
         public void AddForce(Vector3 f)
         {
-            force += f;
+            if (!Locked)
+            {
+                force += f;
+            }
         }
-
         public Vector3 Update(float deltaTime)
         {
-            acceleration = force / mass;
-            velocity += acceleration * deltaTime;
-            position += velocity * deltaTime;
+            if (!Locked)
+            {
+                Vector3 Gravity = new Vector3(0, -9.81f, 0);
+                force += Gravity * deltaTime;
+                acceleration = force / mass;
+                velocity += acceleration * deltaTime;
+                position += velocity * deltaTime* 0.3f;
+            }
+            
             force = Vector3.zero;            
             return position;
         }
     }
 
 
+    
+
+
+    [System.Serializable]
     public class SpringDamper
     {
-        public Particle p1, p2;
+        public ParticleBehaviour p1, p2;
+        [HideInInspector]
         public float Ks; //spring constant or tension
+        [HideInInspector]
         public float Kd; //damping factor
+        [HideInInspector]
         public float Lo; //rest length
+        
 
-        public SpringDamper(Particle particle1, Particle particle2, float springKs,float springKd, float springLo)
+        public SpringDamper(ParticleBehaviour particle1, ParticleBehaviour particle2, float springKs,float springKd, float springLo)
         {
             p1 = particle1;
             p2 = particle2;
@@ -68,6 +81,7 @@ namespace HookesLaw
             Kd = springKd;
             Lo = springLo;
         }
+
         public void ApplySpring()
         {
             var e = p2.position - p1.position;
