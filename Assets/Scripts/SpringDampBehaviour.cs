@@ -17,13 +17,7 @@ namespace HookesLaw
         // Use this for initialization
         void Start()
         {
-            CreateParticles(sizeNByN);
-            foreach (var particleBehaviour in particles)
-            {
-                particleBehaviour.particle.name = particleBehaviour.name;
-            }
-            AssignDampers(particles);
-            CreateTriangles(particles);
+            SetUp();
         }
 
         // Update is called once per frame
@@ -92,12 +86,6 @@ namespace HookesLaw
                     sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN + 1].particle, springTension, springDamper, restLength);
                     SpringDampers.Add(sD);
                 }
-
-                //Locking particles
-                if (i <sizeNByN || i >(sizeNByN *sizeNByN)-sizeNByN)
-                {
-                    particles[i].particle.Locked = true;
-                }
             }
         }
 
@@ -147,7 +135,7 @@ namespace HookesLaw
         public void CheckParticleDistance()
         {
             List<SpringDamper> temp = SpringDampers;
-            for(int i =0; i <SpringDampers.Count;i++)
+            for (int i = 0; i < SpringDampers.Count; i++)
             {
                 if (restLength * 2 < Vector3.Distance(SpringDampers[i].p2.position, SpringDampers[i].p1.position))
                 {
@@ -155,6 +143,28 @@ namespace HookesLaw
                 }
             }
             SpringDampers = temp;
+        }
+
+        public void SetUp()
+        {
+            CreateParticles(sizeNByN);
+            foreach (var particleBehaviour in particles)
+            {
+                particleBehaviour.particle.name = particleBehaviour.name;
+            }
+            AssignDampers(particles);
+            CreateTriangles(particles);
+        }
+
+        public void Destroy()
+        {
+            SpringDampers.Clear();
+            foreach (var p in particles)
+            {
+                Destroy(p.gameObject);
+            }
+            particles.Clear();
+            triangles.Clear();
         }
     }
 

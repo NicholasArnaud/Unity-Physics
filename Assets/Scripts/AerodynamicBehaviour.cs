@@ -8,7 +8,7 @@ namespace HookesLaw
     {
         public static float windDensity = 1f;
         public static Vector3 Dir = new Vector3(1,1,1);
-        public static float dragCo = 0.5f;
+        public static float dragCo = 1;
         public List<Triangle> triangles;
 
         [System.Serializable]

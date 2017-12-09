@@ -12,6 +12,7 @@ public class UIControl : MonoBehaviour
     public Text particleNumText;
     public Text particleLockText;
     private bool updated = false;
+    public int setter = 0;
 
     private void Start()
     {
@@ -46,7 +47,7 @@ public class UIControl : MonoBehaviour
 
         for (int i = 0; i < particleList.particles.Count; i++)
         {
-           ParticleBehaviour sPart = particleList.particles[i];
+            ParticleBehaviour sPart = particleList.particles[i];
             if (selectedParticle != sPart.particle)
             {
                 sPart.gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
@@ -69,8 +70,102 @@ public class UIControl : MonoBehaviour
             particleLockText.text = "Unlocked!";
         }
     }
-    private void OnDestroy()
+
+    public void Reset()
     {
-        Destroy(particleList);
+        switch (setter)
+        {
+            case 0:
+                {
+                    setter++;
+                    particleList.Destroy();
+                    particleList.SetUp();
+                    for (int i = 0; i < particleList.sizeNByN * particleList.sizeNByN - 1; i++)
+                    {
+                        if (i % particleList.sizeNByN >= particleList.sizeNByN - 1)
+                        {
+                            particleList.particles[i].particle.Locked = true;
+                        }
+                        if (i == particleList.sizeNByN * particleList.sizeNByN - 2)
+                            particleList.particles[i + 1].particle.Locked = true;
+                    }
+                    updated = false;
+                    break;
+                }
+            case 1:
+                {
+                    setter++;
+                    particleList.Destroy();
+                    particleList.SetUp();
+                    for (int i = 0; i < particleList.sizeNByN * particleList.sizeNByN - 1; i++)
+                    {
+                        if (i % particleList.sizeNByN * particleList.sizeNByN == 0)
+                        {
+                            particleList.particles[i].particle.Locked = true;
+                        }
+                    }
+                    updated = false;
+                    break;
+                }
+            case 2:
+                {
+                    setter++;
+                    particleList.Destroy();
+                    particleList.SetUp();
+                    for (int i = 0; i <= particleList.sizeNByN - 1; i++)
+                    {
+                        particleList.particles[i].particle.Locked = true;
+                    }
+                    updated = false;
+                    break;
+                }
+            case 3:
+                {
+                    setter++;
+                    particleList.Destroy();
+                    particleList.SetUp();
+                    for (int i = particleList.particles.Count - 1; i >= particleList.sizeNByN * particleList.sizeNByN - particleList.sizeNByN; i--)
+                    {
+                        particleList.particles[i].particle.Locked = true;
+
+                        if (i == particleList.sizeNByN * particleList.sizeNByN - 2)
+                            particleList.particles[i + 1].particle.Locked = true;
+                    }
+                    updated = false;
+                    break;
+                }
+
+            case 4:
+                {
+                    setter++;
+                    particleList.Destroy();
+                    particleList.SetUp();
+                    for (int i = 0; i < particleList.sizeNByN * particleList.sizeNByN - 1; i++)
+                    {
+                        if (i < particleList.sizeNByN || i >= (particleList.sizeNByN * particleList.sizeNByN) - particleList.sizeNByN)
+                        {
+                            particleList.particles[i].particle.Locked = true;
+                            if (i == particleList.sizeNByN * particleList.sizeNByN - 2)
+                                particleList.particles[i + 1].particle.Locked = true;
+                        }
+                    }
+                    updated = false;
+                    break;
+                }
+
+
+
+            default:
+                {
+                    setter = 0;
+                    foreach( var p in particleList.particles)
+                    {
+                        p.particle.Locked = false;
+                    }
+                    break;
+                }
+
+        }
+
     }
 }
