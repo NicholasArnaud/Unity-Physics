@@ -6,9 +6,9 @@ namespace HookesLaw
 {
     public class AerodynamicBehaviour
     {
-        public static float windDensity = 1f;
-        public static Vector3 Dir = new Vector3(1,1,1);
-        public static float dragCo = 1;
+        public static float windDensity = 2f;
+        public static Vector3 Dir = new Vector3(2,2,2);
+        public static float dragCo = 2.5f;
         public List<Triangle> triangles;
 
         [System.Serializable]
@@ -42,9 +42,9 @@ namespace HookesLaw
                 _p3.position - _p1.position).normalized;
             float a = Vector3.Dot(v, nNorm) / v.magnitude;
             Vector3 vAN = -.5f * windDensity * (v.magnitude * v.magnitude) * dragCo * a * nNorm;
-            _p1.AddForce(vAN / 3);
-            _p2.AddForce(vAN / 3);
-            _p3.AddForce(vAN / 3);
+            _p1.AddForce(vAN/3);
+            _p2.AddForce(vAN/3);
+            _p3.AddForce(vAN/3);
         }
     }
 }

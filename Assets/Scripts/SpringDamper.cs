@@ -45,14 +45,12 @@ namespace HookesLaw
         {
             if (!Locked)
             {
-                Vector3 Gravity = new Vector3(0, -9.81f, 0);
-                force += Gravity * deltaTime;
                 acceleration = force / mass;
                 velocity += acceleration * deltaTime;
-                position += velocity * deltaTime* 0.3f;
+                position += velocity * deltaTime;
             }
             
-            force = Vector3.zero;            
+            force = Vector3.zero;  
             return position;
         }
     }

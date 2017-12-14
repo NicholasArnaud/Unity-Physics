@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 namespace HookesLaw
@@ -7,6 +8,7 @@ namespace HookesLaw
     {
         [SerializeField]
         public Particle particle;
+        
         // Use this for initialization
         void Awake()
         {
@@ -16,8 +18,10 @@ namespace HookesLaw
         // Update is called once per frame
         public void Update()
         {
+            particle.position = transform.position;
             transform.position = particle.Update(Time.fixedDeltaTime);
         }
+
     }
 
 }
