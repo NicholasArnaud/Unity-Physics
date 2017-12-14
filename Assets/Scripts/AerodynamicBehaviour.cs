@@ -14,11 +14,11 @@ namespace HookesLaw
         [System.Serializable]
         public class Triangle
         {
-            public ParticleBehaviour _p1;
-            public ParticleBehaviour _p2;
-            public ParticleBehaviour _p3;
+            public Particle _p1;
+            public Particle _p2;
+            public Particle _p3;
 
-            public Triangle(ParticleBehaviour p1, ParticleBehaviour p2, ParticleBehaviour p3)
+            public Triangle(Particle p1, Particle p2, Particle p3)
             {
                 _p1 = p1;
                 _p2 = p2;
@@ -28,9 +28,9 @@ namespace HookesLaw
 
         public static void WindForce(Triangle triangle)
         {
-            ParticleBehaviour _p1 = triangle._p1;
-            ParticleBehaviour _p2 = triangle._p2;
-            ParticleBehaviour _p3 = triangle._p3;
+            Particle _p1 = triangle._p1;
+            Particle _p2 = triangle._p2;
+            Particle _p3 = triangle._p3;
 
             Vector3 v1 = _p1.velocity;
             Vector3 v2 = _p2.velocity;

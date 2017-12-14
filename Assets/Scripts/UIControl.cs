@@ -7,12 +7,12 @@ using HookesLaw;
 public class UIControl : MonoBehaviour
 {
     public SpringDampBehaviour particleList;
-    public HookesLaw.ParticleBehaviour selectedParticle;
+    public HookesLaw.Particle selectedParticle;
     public Slider particleSlider;
     public Text particleNumText;
     public Text particleLockText;
-    private bool updated = false;
-    public int setter = 0;
+    private bool updated;
+    public int setter;
 
     private void Start()
     {
@@ -34,9 +34,9 @@ public class UIControl : MonoBehaviour
         if (particleList != null || particleList.particles.Count > 0)
         {
             particleSlider.maxValue = particleList.particles.Count - 1;
-            selectedParticle = particleList.particles[(int)particleSlider.value].particle;
+            selectedParticle = particleList.particles[(int)particleSlider.value];
             particleList.particles[(int)particleSlider.value].gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
-            particleNumText.text = "Particle: " + selectedParticle.name.ToString();
+            particleNumText.text = "Particle: " + selectedParticle.name;
             if (selectedParticle.Locked == false)
                 particleLockText.text = "Unlocked!";
             else
@@ -47,8 +47,8 @@ public class UIControl : MonoBehaviour
 
         for (int i = 0; i < particleList.particles.Count; i++)
         {
-            ParticleBehaviour sPart = particleList.particles[i];
-            if (selectedParticle != sPart.particle)
+            HookesLaw.Particle sPart = particleList.particles[i];
+            if (selectedParticle != sPart)
             {
                 sPart.gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
             }
@@ -84,10 +84,10 @@ public class UIControl : MonoBehaviour
                     {
                         if (i % particleList.sizeNByN >= particleList.sizeNByN - 1)
                         {
-                            particleList.particles[i].particle.Locked = true;
+                            particleList.particles[i].Locked = true;
                         }
                         if (i == particleList.sizeNByN * particleList.sizeNByN - 2)
-                            particleList.particles[i + 1].particle.Locked = true;
+                            particleList.particles[i + 1].Locked = true;
                     }
                     updated = false;
                     break;
@@ -101,7 +101,7 @@ public class UIControl : MonoBehaviour
                     {
                         if (i % particleList.sizeNByN * particleList.sizeNByN == 0)
                         {
-                            particleList.particles[i].particle.Locked = true;
+                            particleList.particles[i].Locked = true;
                         }
                     }
                     updated = false;
@@ -114,7 +114,7 @@ public class UIControl : MonoBehaviour
                     particleList.SetUp();
                     for (int i = 0; i <= particleList.sizeNByN - 1; i++)
                     {
-                        particleList.particles[i].particle.Locked = true;
+                        particleList.particles[i].Locked = true;
                     }
                     updated = false;
                     break;
@@ -126,10 +126,10 @@ public class UIControl : MonoBehaviour
                     particleList.SetUp();
                     for (int i = particleList.particles.Count - 1; i >= particleList.sizeNByN * particleList.sizeNByN - particleList.sizeNByN; i--)
                     {
-                        particleList.particles[i].particle.Locked = true;
+                        particleList.particles[i].Locked = true;
 
                         if (i == particleList.sizeNByN * particleList.sizeNByN - 2)
-                            particleList.particles[i + 1].particle.Locked = true;
+                            particleList.particles[i + 1].Locked = true;
                     }
                     updated = false;
                     break;
@@ -144,9 +144,9 @@ public class UIControl : MonoBehaviour
                     {
                         if (i < particleList.sizeNByN || i >= (particleList.sizeNByN * particleList.sizeNByN) - particleList.sizeNByN)
                         {
-                            particleList.particles[i].particle.Locked = true;
+                            particleList.particles[i].Locked = true;
                             if (i == particleList.sizeNByN * particleList.sizeNByN - 2)
-                                particleList.particles[i + 1].particle.Locked = true;
+                                particleList.particles[i + 1].Locked = true;
                         }
                     }
                     updated = false;
@@ -160,7 +160,7 @@ public class UIControl : MonoBehaviour
                     setter = 0;
                     foreach( var p in particleList.particles)
                     {
-                        p.particle.Locked = false;
+                        p.Locked = false;
                     }
                     break;
                 }

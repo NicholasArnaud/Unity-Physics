@@ -13,7 +13,7 @@ namespace HookesLaw
         public List<SpringDamper> SpringDampers = new List<SpringDamper>();
         public List<AerodynamicBehaviour.Triangle> triangles = new List<AerodynamicBehaviour.Triangle>();
         [HideInInspector]
-        public List<global::ParticleBehaviour> particles;
+        public List<Particle> particles;
         // Use this for initialization
         void Start()
         {
@@ -44,7 +44,7 @@ namespace HookesLaw
         }
 
 
-        void AssignDampers(List<global::ParticleBehaviour> particles)
+        void AssignDampers(List<Particle> particles)
         {
             SpringDamper sD;
 
@@ -53,11 +53,11 @@ namespace HookesLaw
                 //Setting Verticals
                 if (i % sizeNByN < sizeNByN - 1)
                 {
-                    sD = new SpringDamper(particles[i].particle, particles[i + 1].particle, springTension, springDamper, restLength);
+                    sD = new SpringDamper(particles[i], particles[i + 1], springTension, springDamper, restLength);
                     SpringDampers.Add(sD);
                     if (i % sizeNByN == 0)
                     {
-                        sD = new SpringDamper(particles[i].particle, particles[i + 2].particle, springTension, springDamper, restLength);
+                        sD = new SpringDamper(particles[i], particles[i + 2], springTension, springDamper, restLength);
                         SpringDampers.Add(sD);
                     }
 
@@ -66,11 +66,11 @@ namespace HookesLaw
                 //Setting Horizontals
                 if (i < sizeNByN * sizeNByN - sizeNByN)
                 {
-                    sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN].particle, springTension, springDamper, restLength);
+                    sD = new SpringDamper(particles[i], particles[i + sizeNByN], springTension, springDamper, restLength);
                     SpringDampers.Add(sD);
                     if (i % sizeNByN == 0)
                     {
-                        sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN + 1].particle, springTension, springDamper, restLength);
+                        sD = new SpringDamper(particles[i], particles[i + sizeNByN + 1], springTension, springDamper, restLength);
                         SpringDampers.Add(sD);
                     }
                 }
@@ -78,18 +78,18 @@ namespace HookesLaw
                 //Setting diagnals
                 if (i < sizeNByN * sizeNByN - sizeNByN && i % sizeNByN < sizeNByN - 1)
                 {
-                    sD = new SpringDamper(particles[i + 1].particle, particles[i + sizeNByN].particle, springTension, springDamper, restLength);
+                    sD = new SpringDamper(particles[i + 1], particles[i + sizeNByN], springTension, springDamper, restLength);
                     SpringDampers.Add(sD);
                 }
                 if (i < sizeNByN * sizeNByN - sizeNByN && i % sizeNByN < sizeNByN - 1)
                 {
-                    sD = new SpringDamper(particles[i].particle, particles[i + sizeNByN + 1].particle, springTension, springDamper, restLength);
+                    sD = new SpringDamper(particles[i], particles[i + sizeNByN + 1], springTension, springDamper, restLength);
                     SpringDampers.Add(sD);
                 }
             }
         }
 
-        void CreateTriangles(List<global::ParticleBehaviour> particles)
+        void CreateTriangles(List<Particle> particles)
         {
             for (int i = 0; i < sizeNByN * sizeNByN - 1; i++)
             {
@@ -99,14 +99,14 @@ namespace HookesLaw
                     int triPeak = i + 1;
                     int triEdge = i + sizeNByN;
 
-                    AerodynamicBehaviour.Triangle triangle = new AerodynamicBehaviour.Triangle(particles[triBase].particle, particles[triEdge].particle, particles[triPeak].particle);
+                    AerodynamicBehaviour.Triangle triangle = new AerodynamicBehaviour.Triangle(particles[triBase], particles[triEdge], particles[triPeak]);
                     triangles.Add(triangle);
 
                     triBase = i + sizeNByN + 1;
                     triPeak = i + 1;
                     triEdge = i + sizeNByN;
 
-                    triangle = new AerodynamicBehaviour.Triangle(particles[triBase].particle, particles[triEdge].particle, particles[triPeak].particle);
+                    triangle = new AerodynamicBehaviour.Triangle(particles[triBase], particles[triEdge], particles[triPeak]);
                     triangles.Add(triangle);
                 }
 
@@ -115,7 +115,7 @@ namespace HookesLaw
 
         void CreateParticles(int sizeNbyN)
         {
-            particles = new List<global::ParticleBehaviour>();
+            particles = new List<Particle>();
             for (int i = 0; i < sizeNbyN; i++)
             {
                 for (int j = 0; j < sizeNbyN; j++)
@@ -124,10 +124,10 @@ namespace HookesLaw
                     particle.gameObject.name = "p" + (i * sizeNbyN + j);
                     particle.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     Destroy(particle.gameObject.GetComponent<SphereCollider>());
-                    particle.transform.SetParent(this.gameObject.transform);
+                    particle.transform.SetParent(gameObject.transform);
                     particle.transform.position = new Vector3(i, j, 0);
-                    particle.AddComponent<global::ParticleBehaviour>();
-                    particles.Add(particle.GetComponent<global::ParticleBehaviour>());
+                    particle.AddComponent<ParticleBehaviour>();
+                    particles.Add(particle.GetComponent<Particle>());
                 }
             }
         }
@@ -148,10 +148,6 @@ namespace HookesLaw
         public void SetUp()
         {
             CreateParticles(sizeNByN);
-            foreach (var particleBehaviour in particles)
-            {
-                particleBehaviour.particle.name = particleBehaviour.name;
-            }
             AssignDampers(particles);
             CreateTriangles(particles);
         }
@@ -161,7 +157,7 @@ namespace HookesLaw
             SpringDampers.Clear();
             foreach (var p in particles)
             {
-                Destroy(p.gameObject);
+               // Destroy(p.gameObject);
             }
             particles.Clear();
             triangles.Clear();
