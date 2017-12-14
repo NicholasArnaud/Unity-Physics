@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HookesLaw;
+using UnityEditor;
 using UnityEngine;
 
 namespace HookesLaw
@@ -10,10 +11,11 @@ namespace HookesLaw
         public float springTension;
         public float springDamper;
         public float restLength;
+        
         public List<SpringDamper> SpringDampers = new List<SpringDamper>();
         public List<AerodynamicBehaviour.Triangle> triangles = new List<AerodynamicBehaviour.Triangle>();
         [HideInInspector]
-        public List<global::ParticleBehaviour> particles;
+        public List<ParticleBehaviour> particles;
         // Use this for initialization
         void Start()
         {
@@ -21,19 +23,23 @@ namespace HookesLaw
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
+            foreach (var p in particles)
+            {
+                p.particle.AddForce(new Vector3(0,-9.81f,0));
+            }
             foreach (var sD in SpringDampers)
             {
                 sD.ApplySpring();
             }
-
             foreach (AerodynamicBehaviour.Triangle triangle in triangles)
             {
                 AerodynamicBehaviour.WindForce(triangle);
             }
             CheckParticleDistance();
         }
+
 
         private void OnDrawGizmos()
         {
@@ -43,8 +49,7 @@ namespace HookesLaw
             }
         }
 
-
-        void AssignDampers(List<global::ParticleBehaviour> particles)
+        void AssignDampers(List<ParticleBehaviour> particles)
         {
             SpringDamper sD;
 
@@ -89,7 +94,7 @@ namespace HookesLaw
             }
         }
 
-        void CreateTriangles(List<global::ParticleBehaviour> particles)
+        void CreateTriangles(List<ParticleBehaviour> particles)
         {
             for (int i = 0; i < sizeNByN * sizeNByN - 1; i++)
             {
@@ -115,7 +120,7 @@ namespace HookesLaw
 
         void CreateParticles(int sizeNbyN)
         {
-            particles = new List<global::ParticleBehaviour>();
+            particles = new List<ParticleBehaviour>();
             for (int i = 0; i < sizeNbyN; i++)
             {
                 for (int j = 0; j < sizeNbyN; j++)
@@ -123,11 +128,11 @@ namespace HookesLaw
                     GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     particle.gameObject.name = "p" + (i * sizeNbyN + j);
                     particle.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                    Destroy(particle.gameObject.GetComponent<SphereCollider>());
-                    particle.transform.SetParent(this.gameObject.transform);
+                    particle.gameObject.GetComponent<SphereCollider>();
+                    particle.transform.SetParent(gameObject.transform);
                     particle.transform.position = new Vector3(i, j, 0);
-                    particle.AddComponent<global::ParticleBehaviour>();
-                    particles.Add(particle.GetComponent<global::ParticleBehaviour>());
+                    particle.AddComponent<ParticleBehaviour>();
+                    particles.Add(particle.GetComponent<ParticleBehaviour>());
                 }
             }
         }
@@ -137,7 +142,7 @@ namespace HookesLaw
             List<SpringDamper> temp = SpringDampers;
             for (int i = 0; i < SpringDampers.Count; i++)
             {
-                if (restLength * 2 < Vector3.Distance(SpringDampers[i].p2.position, SpringDampers[i].p1.position))
+                if (restLength * 4 < Vector3.Distance(SpringDampers[i].p2.position, SpringDampers[i].p1.position))
                 {
                     temp.Remove(SpringDampers[i]);
                 }
@@ -148,10 +153,6 @@ namespace HookesLaw
         public void SetUp()
         {
             CreateParticles(sizeNByN);
-            foreach (var particleBehaviour in particles)
-            {
-                particleBehaviour.particle.name = particleBehaviour.name;
-            }
             AssignDampers(particles);
             CreateTriangles(particles);
         }
@@ -167,5 +168,4 @@ namespace HookesLaw
             triangles.Clear();
         }
     }
-
 }

@@ -7,13 +7,9 @@ using HookesLaw;
 public class UIControl : MonoBehaviour
 {
     public SpringDampBehaviour particleList;
-    public HookesLaw.ParticleBehaviour selectedParticle;
-    public Slider particleSlider;
-    public Text particleNumText;
-    public Text particleLockText;
-    private bool updated = false;
-    public int setter = 0;
-
+    private bool updated;
+    public int setter;
+    public float timer;
     private void Start()
     {
         UpdateUI();
@@ -21,8 +17,10 @@ public class UIControl : MonoBehaviour
 
     private void Update()
     {
-        if (!updated)
+        timer += Time.deltaTime;
+        if (!updated || timer >=3)
         {
+            timer = 0;
             UpdateUI();
             updated = true;
         }
@@ -33,42 +31,18 @@ public class UIControl : MonoBehaviour
     {
         if (particleList != null || particleList.particles.Count > 0)
         {
-            particleSlider.maxValue = particleList.particles.Count - 1;
-            selectedParticle = particleList.particles[(int)particleSlider.value].particle;
-            particleList.particles[(int)particleSlider.value].gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
-            particleNumText.text = "Particle: " + selectedParticle.name.ToString();
-            if (selectedParticle.Locked == false)
-                particleLockText.text = "Unlocked!";
-            else
-                particleLockText.text = "Locked!";
+            for (int i = 0; i < particleList.particles.Count; i++)
+            {
+                if (particleList.particles[i].particle.Locked)
+                    particleList.particles[i].GetComponent<MeshRenderer>().material.color = Color.black;
+                else
+                {
+                    particleList.particles[i].GetComponent<MeshRenderer>().material.color = Color.cyan;
+                }
+            }
         }
         else
             updated = false;
-
-        for (int i = 0; i < particleList.particles.Count; i++)
-        {
-            ParticleBehaviour sPart = particleList.particles[i];
-            if (selectedParticle != sPart.particle)
-            {
-                sPart.gameObject.GetComponent<MeshRenderer>().material.color = Color.white;
-            }
-        }
-    }
-
-
-    public void LockParticle()
-    {
-        updated = false;
-        if (selectedParticle.Locked == false)
-        {
-            selectedParticle.Locked = true;
-            particleLockText.text = "Locked!";
-        }
-        else
-        {
-            selectedParticle.Locked = false;
-            particleLockText.text = "Unlocked!";
-        }
     }
 
     public void Reset()
