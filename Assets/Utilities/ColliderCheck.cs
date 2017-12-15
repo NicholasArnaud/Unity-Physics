@@ -48,15 +48,28 @@ public class ColliderCheck : MonoBehaviour
                     ActiveList.Add(axisList[i]);
                     //Handling collision here
                     colliding = TestOnLap(axisList[i], axisList[j]);
-                    if (colliding == true)
+                    if (colliding)
                     {
                         CollidingObj.Add(axisList[i]);
                         CollidingObj.Add(axisList[j]);
                     }
-
                 }
             }
         }
+        if (CollidingObj.Count > 2)
+        {
+            List<AABB> tempList = CollidingObj;
+            for (int i = CollidingObj.Count - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < CollidingObj.Count - 1; j++)
+                {
+                    if (CollidingObj[j].name == CollidingObj[i].name && i != j)
+                        tempList.RemoveAt(j);
+                }
+            }
+            CollidingObj = tempList;
+        }
+
 
         Debug.Log("NumOfAABBInActive: " + ActiveList.Count);
     }

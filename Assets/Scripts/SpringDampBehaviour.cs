@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using HookesLaw;
-using UnityEditor;
 using UnityEngine;
 
 namespace HookesLaw

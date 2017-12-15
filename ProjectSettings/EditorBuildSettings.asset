@@ -8,3 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/2.HooksLaw.unity
     guid: f95ddc95c1c5c9442aa157fbd49432f2
+  - enabled: 0
+    path: Assets/Scenes/1.Boids.unity
+    guid: 435c0441e288cd245859eea773ef92f7
