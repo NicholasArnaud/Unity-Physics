@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Deployment.Internal;
 using System.Linq;
 using UnityEngine;
 
@@ -69,8 +70,11 @@ public class ColliderCheck : MonoBehaviour
             }
             CollidingObj = tempList;
         }
-
-
+        foreach (var aabb in CollidingObj)
+        {
+            aabb.gameObject.GetComponent<Renderer>().material.color = Color.red;
+        }
+        
         Debug.Log("NumOfAABBInActive: " + ActiveList.Count);
     }
 
