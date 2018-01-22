@@ -25,7 +25,7 @@ namespace HookesLaw
                 _p3 = p3;
             }
         }
-
+        
         public static void WindForce(Triangle triangle)
         {
             Particle _p1 = triangle._p1;

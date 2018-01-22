@@ -25,8 +25,7 @@ public class UIControl : MonoBehaviour
             updated = true;
         }
     }
-
-
+    
     public void UpdateUI()
     {
         if (particleList != null || particleList.particles.Count > 0)

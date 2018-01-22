@@ -9,8 +9,6 @@ public class ColliderCheck : MonoBehaviour
     public bool colliding;
     [SerializeField]
     private List<AABB> axisList;
-    private Vector2 gameObjectPos;
-    private Vector2 gameObjectScale;
     [SerializeField]
     List<AABB> ActiveList = new List<AABB>();
     public List<AABB> CollidingObj = new List<AABB>();
